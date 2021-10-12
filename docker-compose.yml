@@ -1,0 +1,89 @@
+version: "3.8"
+services:
+
+  redis-server:
+    image: redis:alpine
+    expose:
+      - "6379"
+    networks:
+      - private-network
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+
+  web-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 127.0.0.1:5000:5000
+    networks:
+      - private-network
+    depends_on:
+      - mongo-server
+    environment:
+      - MONGO_URL=mongodb://mongo-server:27017
+      - REDIS_URL=redis://redis-server:6379
+      - AUTH_PASS_KEY='Port Wine 1000.'
+      - MAIL_USER=moderator.codeport@gmail.com
+      - MAIL_PASS='Port Wine 1000'
+    links:
+      - redis-server
+
+  mongo-server:
+    image: mongo:3.6.19-xenial
+    command: mongod --smallfiles --logpath=/dev/null
+    ports:
+      - 27017:27017
+    networks:
+      - private-network
+    volumes:
+      - ./mongo/data:/data/db
+
+  client-developer-server:
+    build:
+      context: ./developer
+      dockerfile: Dockerfile
+    ports:
+      - 3006:3006
+    networks:
+      - private-network
+    volumes:
+      - ./developer/src:/usr/app/developer/src
+      - ./developer/public:/usr/app/developer/public
+    depends_on:
+      - web-server
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+    stdin_open: true
+    tty: true
+
+  client-admin-server:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - private-network
+    volumes:
+      - ./admin/src:/usr/app/admin/src
+      - ./admin/public:/usr/app/admin/public
+    depends_on:
+      - web-server
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+    stdin_open: true
+    tty: true
+
+networks:
+  private-network:
+    driver: bridge
+    
+
+volumes:
+  mongo-data:
+    driver: local
