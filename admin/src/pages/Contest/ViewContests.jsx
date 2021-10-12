@@ -1,21 +1,28 @@
-import { Typography, Button } from '@material-ui/core'
+import {
+  Typography, Button, Dialog, DialogContent, DialogTitle
+} from '@material-ui/core'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import BasicTable from '../../components/BasicTable'
+import { loadContacts } from '../../redux/actions/contactActions'
 import { creatorContests } from '../../redux/actions/contestActions'
 
 export class ViewChallenges extends Component {
   state = {
-    data: []
+    data: null,
+    modal: false
+  }
+  handleClose = () => {
+    this.setState({
+      data: null,
+      modal: false
+    })
   }
   componentDidMount() {
     this.props.creatorContests()
-    this.setState({
-      data: []
-    })
+    this.props.loadContacts()
   }
   render() {
-    console.log(this.props.loadData);
     return (
       <>
         <Typography
@@ -52,12 +59,7 @@ export class ViewChallenges extends Component {
               disableClickEventBubbling: true,
               renderCell: params => {
                 const onClick = () => {
-                  const api = params.api
-                  const fields = api.getAllColumns()
-                  console.log(
-                    params.row,
-                    fields.map(c => c.field)
-                  )
+                  this.setState({ data: params.row, modal: true });
                 }
                 return <Button onClick={onClick}>Click</Button>
               },
@@ -65,14 +67,39 @@ export class ViewChallenges extends Component {
             }
           ]}
         />
+        <Dialog open={this.state.modal}
+          onClose={this.handleClose}>
+          <DialogContent>
+            <DialogTitle>Contacts</DialogTitle>
+            {this.props.contacts &&
+              <BasicTable
+                rows={this.props.contacts.msg.map((el) => ({ ...el, id: el._id }))}
+                columns={[
+                  { field: "id" },
+                  { field: "full_name", flex: 1 },
+                  {
+                    field: "",
+                    disableClickEventBubbling: true,
+                    renderCell: params => {
+                      const onClick = () => {
+                        console.log(this.state.data, params.row);
+                      }
+                      return <Button onClick={onClick}>Click</Button>
+                    }
+                  }]}
+              />}
+          </DialogContent>
+        </Dialog>
       </>
     )
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.contestState.admin_contests);
-  return { loadData: state.contestState.admin_contests }
+  return {
+    loadData: state.contestState.admin_contests,
+    contacts: state.contactState.view_contact
+  }
 }
 
-export default connect(mapStateToProps, { creatorContests })(ViewChallenges)
+export default connect(mapStateToProps, { creatorContests, loadContacts })(ViewChallenges)

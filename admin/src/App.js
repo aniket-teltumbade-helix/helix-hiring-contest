@@ -13,6 +13,7 @@ import LandingPage from './pages/LandingPage'
 import ViewChallenges from './pages/Challenge/ViewChallenges'
 import ViewContests from './pages/Contest/ViewContests'
 import LeaderBoard from './pages/LeaderBoard'
+import Contacts from './pages/Contacts/Contacts'
 
 class App extends Component {
   componentDidMount = () => {
@@ -47,6 +48,7 @@ class App extends Component {
                   <Route exact path='/challenges' component={ViewChallenges} />
                   <Route exact path='/contests' component={ViewContests} />
                   <Route exact path='/leaderboard' component={LeaderBoard} />
+                  <Route exact path='/contacts' component={Contacts} />
                   <Redirect from='*' to='/contests/create' />
                 </Switch>
               </Sidebar>

@@ -12,6 +12,7 @@ const CompanyRouter = require('./Routes/CompanyRouter');
 const ContestRouter = require('./Routes/ContestRouter');
 const SubmitRouter = require('./Routes/SubmitRouter');
 const RankRouter = require('./Routes/RankRouter');
+const ContactRouter = require('./Routes/ContactRoute');
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use('/admin', CompanyRouter)
 app.use('/contest', ContestRouter)
 app.use('/submit', SubmitRouter)
 app.use('/rank', RankRouter)
+app.use('/contact', ContactRouter)
 
 app.get('/', (req, res) => {
   res.send('health full')
