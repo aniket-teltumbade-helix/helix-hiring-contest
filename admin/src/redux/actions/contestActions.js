@@ -6,7 +6,8 @@ import {
   LOAD_ENDED_CONTESTS,
   LOAD_LIVE_CONTESTS,
   LOAD_PROBLEM,
-  LOAD_UPCOMING_CONTESTS
+  LOAD_UPCOMING_CONTESTS,
+  SEND_INVITE
 } from '../actionTypes'
 
 export const addContest = body => async dispatch => {
@@ -120,3 +121,20 @@ export const creatorContests = () => async dispatch => {
     payload: res.data
   })
 }
+export const contestInvite = (full_name, email, name, start_date, end_date) => async (dispatch) => {
+  var data = JSON.stringify({full_name, email, name, start_date, end_date});
+
+  var config = {
+    method: 'post',
+    url: 'http://localhost:5000/contest/invite',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  };
+
+  var result = await axios(config)
+  dispatch({type:SEND_INVITE,payload:result.data})
+  return result.data
+}
+

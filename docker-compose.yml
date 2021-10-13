@@ -25,7 +25,7 @@ services:
       - REDIS_URL=redis://redis-server:6379
       - AUTH_PASS_KEY='Port Wine 1000.'
       - MAIL_USER=moderator.codeport@gmail.com
-      - MAIL_PASS='Port Wine 1000'
+      - MAIL_PASS=10061991Mad
     links:
       - redis-server
 

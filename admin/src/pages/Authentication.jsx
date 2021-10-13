@@ -80,7 +80,7 @@ class Authentication extends Component {
     role: null,
     company: null,
     company_size: null,
-    country: null
+    country: null,
   }
   componentDidMount() {
     this.setState({ url: this.props.location.pathname.split('/')[2] })
@@ -93,10 +93,34 @@ class Authentication extends Component {
   }
   handleSubmit = e => {
     e.preventDefault()
+    const { email,
+      password,
+      full_name,
+      role,
+      company,
+      company_size,
+      country } = this.state
     if (this.state.url === 'signup') {
-      this.props.compRegister(this.state)
+      if (email !== null &&
+        password !== null &&
+        full_name !== null &&
+        role !== null &&
+        company !== null &&
+        company_size !== null &&
+        country !== null) {
+        this.props.compRegister(this.state)
+      }
+      else {
+        alert("Fill all fields")
+      }
     } else {
-      this.props.compLogin(this.state)
+      if (email !== null &&
+        password !== null) {
+        this.props.compLogin(this.state)
+      }
+      else {
+        alert("Fill all fields")
+      }
     }
   }
   handleInput = e => {
@@ -118,7 +142,6 @@ class Authentication extends Component {
             </Typography>
             <form
               className={classes.form}
-              noValidate
               onSubmit={this.handleSubmit}
             >
               <TextField
@@ -132,6 +155,7 @@ class Authentication extends Component {
                 autoComplete='email'
                 autoFocus
                 onChange={this.handleInput}
+                type='email'
               />
               <TextField
                 variant='outlined'

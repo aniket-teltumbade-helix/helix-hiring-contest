@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Contest = require('../Models/ContestModel')
 const Problem = require('../Models/ProblemModel')
+const { inviteMail } = require('../functions/mail')
 
 exports.addContest = (req, res) => {
   const {
@@ -126,8 +127,8 @@ exports.contestChallenges = (req, res) => {
                 cdoc[0].start_date < new Date() && cdoc[0].end_date > new Date()
                   ? 'Live'
                   : cdoc[0].start_date > new Date()
-                  ? 'Upcoming'
-                  : 'Ended'
+                    ? 'Upcoming'
+                    : 'Ended'
               res
                 .status(200)
                 .send({
@@ -207,4 +208,8 @@ exports.allContests = (req, res) => {
       res.status(200).send(cdoc)
     }
   })
+}
+exports.invitaion = async (req, res) => {
+  let result = await inviteMail(req.body)
+  return await res.send(result)
 }

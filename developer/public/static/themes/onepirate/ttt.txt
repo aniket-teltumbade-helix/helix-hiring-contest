@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+           
+
+        } 
+        body{
+            text-align: center;
+            font-size: 16px;
+            background-color: aqua;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            justify-content: center;
+            display:flex;
+
+            
+        }
+        input{
+            padding: 10px;
+        }
+      
+    </style>
+</head>
+<body>
+    <div class="backg">
+    <h1>Loan Calculator</h1>
+    <p>Amount:</p>
+    <input type="number" id="amount" onclick="com()" placeholder="Amount">
+    <p>Interest Rate:</p>
+    <input type="number" id="Interest_rate" onclick="com()" placeholder="Amount">
+    <p>Months to pay:</p>
+    <input type="button" id="months" onclick="com()" placeholder="Amount">
+<p id="payment"></p>
+</div>
+<script>
+    function com(){
+       var amount=document.getElementById('amount').value;
+     
+       var Interest_rate=document.getElementById('Interest_rate').value;
+       
+       var months = document.getElementById("months").value;
+       var interest=(amount * (Interest_rate * .01 ))/months;
+       var payment=((amount / months) + interest).tofixed(2);
+        payment=payment.tostring().replace(/\B(?=(\d{3})+(+?!\d))/g, " ,")
+       document.getElementById("payment").innerHTML="Monthly Payment =r "+payment;
+
+        
+
+    }
+</script>
+</body>
+</html>

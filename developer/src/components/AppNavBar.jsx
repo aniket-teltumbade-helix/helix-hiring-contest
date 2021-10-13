@@ -17,7 +17,7 @@ import { Menu, ExitToApp } from "@material-ui/icons";
 import React from 'react'
 
 
-function MobileMenu() {
+function MobileMenu(props) {
     return (
         <Box sx={{ display: { md: "none" } }}>
             <Paper
@@ -28,7 +28,7 @@ function MobileMenu() {
                 variant="elevation"
             >
                 <MenuList>
-                    <MenuItem>
+                    {/* <MenuItem>
                         <ListItemText>Home</ListItemText>
                     </MenuItem>
                     <MenuItem>
@@ -36,10 +36,10 @@ function MobileMenu() {
                     </MenuItem>
                     <MenuItem>
                         <ListItemText>Invitation</ListItemText>
-                    </MenuItem>
+                    </MenuItem> */}
                     <Divider />
                     <MenuItem>
-                        <IconButton onClick={this.props.handleLogout} color="primary" aria-label="upload picture" component="span">
+                        <IconButton onClick={props.handleLogout} color="primary" aria-label="upload picture" component="span">
                             <ExitToApp />
                         </IconButton>
                     </MenuItem>
@@ -49,7 +49,7 @@ function MobileMenu() {
     );
 }
 export default function AppNavBar(props) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(false);
     const handleClick = (event) => {
         setAnchorEl(!anchorEl);
     };
@@ -61,8 +61,8 @@ export default function AppNavBar(props) {
                         Helixstack
                     </Typography>
                     <Box sx={{ flexGrow: "3" }}></Box>
-                    <Box sx={{ display: { xs: "none", md: "flex" }, minWidth: "300px" }}>
-                        <Box sx={{ flexGrow: "1" }}>
+                    <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                        {/* <Box sx={{ flexGrow: "1" }}>
                             <Button variant="text" >
                                 Home
                             </Button>
@@ -76,8 +76,8 @@ export default function AppNavBar(props) {
                             <Button variant="text" >
                                 Profile
                             </Button>
-                        </Box>
-                        <Box sx={{ flexGrow: "1" }}>
+                        </Box> */}
+                        <Box >
                             <IconButton onClick={()=>props.handleLogout()} color="secondary" aria-label="upload picture" component="span">
                                 <ExitToApp />
                             </IconButton>

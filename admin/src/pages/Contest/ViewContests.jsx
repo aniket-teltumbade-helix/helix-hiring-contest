@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import BasicTable from '../../components/BasicTable'
 import { loadContacts } from '../../redux/actions/contactActions'
-import { creatorContests } from '../../redux/actions/contestActions'
+import { contestInvite, creatorContests } from '../../redux/actions/contestActions'
 
 export class ViewChallenges extends Component {
   state = {
@@ -75,18 +75,22 @@ export class ViewChallenges extends Component {
               <BasicTable
                 rows={this.props.contacts.msg.map((el) => ({ ...el, id: el._id }))}
                 columns={[
-                  { field: "id" },
+                  { field: "id", hide: true, },
                   { field: "full_name", flex: 1 },
                   {
                     field: "",
                     disableClickEventBubbling: true,
                     renderCell: params => {
                       const onClick = () => {
-                        console.log(this.state.data, params.row);
+                        let { full_name, email } = params.row
+                        let { name, start_date, end_date } = this.state.data
+                        this.props.contestInvite(full_name, email, name, start_date, end_date );
                       }
                       return <Button onClick={onClick}>Click</Button>
                     }
                   }]}
+                width="300px"
+                height="200px"
               />}
           </DialogContent>
         </Dialog>
@@ -102,4 +106,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { creatorContests, loadContacts })(ViewChallenges)
+export default connect(mapStateToProps, { creatorContests, loadContacts, contestInvite })(ViewChallenges)
