@@ -1,6 +1,5 @@
 version: "3.8"
 services:
-
   redis-server:
     image: redis:alpine
     expose:
@@ -14,6 +13,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    image: devhackzone/hackerzone:5000
     ports:
       - 127.0.0.1:5000:5000
     networks:
@@ -43,6 +43,7 @@ services:
     build:
       context: ./developer
       dockerfile: Dockerfile
+    image: devhackzone/hackerzone:3006
     ports:
       - 3006:3006
     networks:
@@ -63,6 +64,7 @@ services:
     build:
       context: ./admin
       dockerfile: Dockerfile
+    image: devhackzone/hackerzone:3000
     ports:
       - 3000:3000
     networks:
@@ -82,7 +84,6 @@ services:
 networks:
   private-network:
     driver: bridge
-    
 
 volumes:
   mongo-data:

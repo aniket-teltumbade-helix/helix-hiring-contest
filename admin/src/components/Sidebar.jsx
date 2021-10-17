@@ -115,6 +115,7 @@ export default function Sidebar (props) {
         { text: 'Create Contest', link: '/Contests/create' }
       ]
     },
+    { text: 'Contacts', link: '/contacts' },
     { text: 'Leaderboard', link: '/leaderboard' },
     { text: 'Statistics', link: '/statistics' }
   ]

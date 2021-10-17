@@ -27,7 +27,7 @@ class App extends Component {
   Logout = () => {
     this.props.logout()
   }
-  render() {
+  render () {
     return (
       <>
         {this.props.authDetails ? (
@@ -55,8 +55,16 @@ class App extends Component {
             ) : this.props.authDetails.isAuth === false ? (
               <>
                 <Switch>
-                  <Route exact path='/auth/signin' component={Authentication} />
-                  <Route exact path='/auth/signup' component={Authentication} />
+                  <Route
+                    exact
+                    path={[
+                      '/auth/signin',
+                      '/auth/signup',
+                      '/auth/request',
+                      '/auth/reset/:passkey'
+                    ]}
+                    component={Authentication}
+                  />
                   <Route path='/' component={LandingPage} />
                 </Switch>
               </>

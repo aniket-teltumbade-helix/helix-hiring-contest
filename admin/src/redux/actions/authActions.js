@@ -28,6 +28,7 @@ export const devRegister = body => async dispatch => {
     type: REGISTER_DEVELOPER,
     payload: result.data
   })
+  return result.data
 }
 
 export const devLogin = body => async dispatch => {
@@ -47,6 +48,7 @@ export const devLogin = body => async dispatch => {
       type: LOGIN_DEVELOPER,
       payload: { isAuth: false, userLogin: null }
     })
+    return result.data.err
   } else {
     if (body.remember === false) {
       sessionStorage.setItem('token', result.data.authtoken)
@@ -57,6 +59,7 @@ export const devLogin = body => async dispatch => {
       type: LOGIN_DEVELOPER,
       payload: { isAuth: true, userLogin: result.data.authtoken }
     })
+    return { msg: 'Login Successful!' }
   }
 }
 
@@ -83,6 +86,7 @@ export const devRequestPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 
 export const devResetPass = body => async dispatch => {
@@ -108,6 +112,7 @@ export const devResetPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 
 export const compRegister = body => async dispatch => {
@@ -127,6 +132,7 @@ export const compRegister = body => async dispatch => {
     type: REGISTER_COMPANY,
     payload: result.data
   })
+  return result.data
 }
 
 export const compLogin = body => async dispatch => {
@@ -157,6 +163,7 @@ export const compLogin = body => async dispatch => {
       payload: { isAuth: true, userLogin: result.data.authtoken }
     })
   }
+  return result.data
 }
 export const compRequestPass = body => async dispatch => {
   const data = JSON.stringify(body)
@@ -181,6 +188,7 @@ export const compRequestPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 export const compResetPass = body => async dispatch => {
   const data = JSON.stringify(body)
@@ -205,6 +213,7 @@ export const compResetPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 export const isAuthenticated = () => async dispatch => {
   if (sessionStorage.getItem('token') || localStorage.getItem('token')) {
@@ -230,6 +239,7 @@ export const isAuthenticated = () => async dispatch => {
         payload: { isAuth: true, userProfile: result.data }
       })
     }
+    return result.data
   }
 }
 export const logout = () => dispatch => {
@@ -239,4 +249,5 @@ export const logout = () => dispatch => {
     type: LOGOUT,
     payload: null
   })
+  return { msg: 'Successful Logout!' }
 }

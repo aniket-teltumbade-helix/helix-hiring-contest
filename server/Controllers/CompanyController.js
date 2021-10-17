@@ -6,6 +6,7 @@ var redis = require('redis')
 var retryStrategy = require('node-redis-retry-strategy')
 const chalk = require('chalk')
 const { redisData } = require('../config')
+const resetPassMail = require('../functions/mail/resetPassMail')
 
 var client = redis.createClient(redisData)
 client.on('connect', function () {
@@ -100,8 +101,8 @@ exports.adminProfile = (req, res) => {
 
 exports.requestCompPassToken = (req, res) => {
   const { email } = req.body
-  Company.findOne(req.body, (docerr, doc) => {
-    if (doc.email) {
+  Company.findOne({ email }, (docerr, doc) => {
+    if (doc) {
       let passtoken = uid(6)
       client.hset(passtoken, doc.email, (rerr, rreply) => {
         resetPassMail(

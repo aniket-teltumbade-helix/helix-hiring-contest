@@ -1,5 +1,5 @@
 # Pull Docker Hub base image
-FROM ubuntu:latest
+FROM ubuntu:20.04
 #or use ubuntu-upstart:12.04
 # FROM ubuntu:latest
 RUN apt-get update 

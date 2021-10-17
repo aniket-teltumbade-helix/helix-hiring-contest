@@ -22,10 +22,9 @@ class App extends Component {
     }
   }
   handleLogout = () => {
-    console.log("log---------out");
     this.props.logout()
   }
-  render() {
+  render () {
     return (
       <>
         {this.props.authDetails ? (
@@ -34,11 +33,7 @@ class App extends Component {
               <>
                 <AppNavBar handleLogout={this.handleLogout}></AppNavBar>
                 <Switch>
-                  <Route
-                    exact
-                    path='/'
-                    component={ViewContests}
-                  />
+                  <Route exact path='/' component={ViewContests} />
                   <Route
                     exact
                     path='/contests/:contest'
@@ -60,8 +55,16 @@ class App extends Component {
             ) : this.props.authDetails.isAuth === false ? (
               <>
                 <Switch>
-                  <Route exact path='/auth/signin' component={Authentication} />
-                  <Route exact path='/auth/signup' component={Authentication} />
+                  <Route
+                    exact
+                    path={[
+                      '/auth/signup',
+                      '/auth/signin',
+                      '/auth/request',
+                      '/auth/reset/:passkey'
+                    ]}
+                    component={Authentication}
+                  />
                   <Route path='/' component={LandingPage} />
                 </Switch>
               </>

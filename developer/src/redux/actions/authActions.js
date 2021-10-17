@@ -79,12 +79,8 @@ export const devRequestPass = body => async dispatch => {
       type: REQUEST_PASS_TOKEN_DEVELOPER,
       payload: result.data
     })
-  } else {
-    dispatch({
-      type: REQUEST_PASS_TOKEN_DEVELOPER,
-      payload: result.data
-    })
   }
+  return result.data
 }
 
 export const devResetPass = body => async dispatch => {
@@ -104,12 +100,8 @@ export const devResetPass = body => async dispatch => {
       type: RESET_PASSWORD_DEVELOPER,
       payload: result.data
     })
-  } else {
-    dispatch({
-      type: RESET_PASSWORD_DEVELOPER,
-      payload: result.data
-    })
   }
+  return result.data
 }
 
 export const compRegister = body => async dispatch => {
@@ -129,6 +121,7 @@ export const compRegister = body => async dispatch => {
     type: REGISTER_COMPANY,
     payload: result.data
   })
+  return result.data
 }
 
 export const compLogin = body => async dispatch => {
@@ -159,6 +152,7 @@ export const compLogin = body => async dispatch => {
       payload: { isAuth: true, userLogin: result.data.authtoken }
     })
   }
+  return { msg: 'Successful' }
 }
 export const compRequestPass = body => async dispatch => {
   const data = JSON.stringify(body)
@@ -177,12 +171,8 @@ export const compRequestPass = body => async dispatch => {
       type: REQUEST_PASS_TOKEN_COMPANY,
       payload: result.data
     })
-  } else {
-    dispatch({
-      type: REQUEST_PASS_TOKEN_COMPANY,
-      payload: result.data
-    })
   }
+  return result.data
 }
 export const compResetPass = body => async dispatch => {
   const data = JSON.stringify(body)
@@ -201,12 +191,8 @@ export const compResetPass = body => async dispatch => {
       type: RESET_PASSWORD_COMPANY,
       payload: result.data
     })
-  } else {
-    dispatch({
-      type: RESET_PASSWORD_COMPANY,
-      payload: result.data
-    })
   }
+  return result.data
 }
 export const isAuthenticated = () => async dispatch => {
   if (sessionStorage.getItem('token') || localStorage.getItem('token')) {

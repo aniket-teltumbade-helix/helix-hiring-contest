@@ -1,12 +1,12 @@
 const Problem = require('../Models/ProblemModel')
 var tmp = require('tmp')
 var fs = require('fs')
-const scriptExecutor = require('../functions/scriptExecutor')
 const path = require('path')
 const os = require('os')
-const javaExecutor = require('../functions/scriptJavaExecutor')
-const cExecutor = require('../functions/scriptCExecutor')
-const cppExecutor = require('../functions/scriptCppExecutor')
+const scriptExecutor = require('../functions/scripts/scriptExecutor')
+const javaExecutor = require('../functions/scripts/scriptJavaExecutor')
+const cExecutor = require('../functions/scripts/scriptCExecutor')
+const cppExecutor = require('../functions/scripts/scriptCppExecutor')
 
 exports.add = (req, res) => {
   let { email } = req
@@ -43,21 +43,22 @@ exports.single = (req, res) => {
 }
 exports.run = (req, res) => {
   let { language, code, samples } = req.body
-  let ext = language === 'python'
+  let ext =
+    language === 'python'
       ? '.py'
       : language === 'javascript'
-        ? '.js'
-        : language === 'php'
-          ? '.php'
-          : null
+      ? '.js'
+      : language === 'php'
+      ? '.php'
+      : null
   let command =
-  language === 'python'
-        ? 'python'
-        : language === 'javascript'
-          ? 'node'
-          : language === 'php'
-            ? 'php'
-            : null
+    language === 'python'
+      ? 'python3'
+      : language === 'javascript'
+      ? 'node'
+      : language === 'php'
+      ? 'php'
+      : null
   var output = new Array()
   var output_error = ''
   var passed = 0
@@ -109,13 +110,11 @@ exports.run = (req, res) => {
   } else {
     let r = (Math.random() + 1).toString(36).substring(2)
     fs.mkdirSync(path.join(os.tmpdir(), r))
-    if (language === "java") {
+    if (language === 'java') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.java'), code)
-    }
-    else if (language === "c") {
+    } else if (language === 'c') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.c'), code)
-    }
-    else if (language === "cpp") {
+    } else if (language === 'cpp') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.cpp'), code)
     }
 
@@ -123,18 +122,10 @@ exports.run = (req, res) => {
       let response
       if (language === 'java') {
         response = javaExecutor(el.input, r)
-      }
-      else if (language === "c") {
-        response = cExecutor(
-          el.input,
-          path.join(os.tmpdir(), r, 'Solution')
-        )
-      }
-      else if (language === "cpp") {
-        response = cppExecutor(
-          el.input,
-          path.join(os.tmpdir(), r, 'Solution')
-        )
+      } else if (language === 'c') {
+        response = cExecutor(el.input, path.join(os.tmpdir(), r, 'Solution'))
+      } else if (language === 'cpp') {
+        response = cppExecutor(el.input, path.join(os.tmpdir(), r, 'Solution'))
       }
       if (response.message) {
         let status = response.message.trim() === el.output.trim()
@@ -170,21 +161,20 @@ exports.compile = (req, res) => {
     language === 'python'
       ? '.py'
       : language === 'javascript'
-        ? '.js'
-        : language === 'php'
-          ? '.php'
-          : null
+      ? '.js'
+      : language === 'php'
+      ? '.php'
+      : null
   let command =
     language === 'python'
-      ? 'python'
-        : language === 'javascript'
-          ? 'node'
-          : language === 'php'
-            ? 'php'
-            : null
+      ? 'python3'
+      : language === 'javascript'
+      ? 'node'
+      : language === 'php'
+      ? 'php'
+      : null
   if (
-    language == 'python' |
-    language === 'javascript' ||
+    (language == 'python') | (language === 'javascript') ||
     language === 'php'
   ) {
     tmp.file({ prefix: 'projectA-', postfix: ext, keep: true }, function (
@@ -206,17 +196,15 @@ exports.compile = (req, res) => {
     let r = (Math.random() + 1).toString(36).substring(2)
     fs.mkdirSync(path.join(os.tmpdir(), r))
     let data
-    if (language === "java") {
+    if (language === 'java') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.java'), code)
       data = javaExecutor(input, r)
       return res.send(data)
-    }
-    else if (language === "c") {
+    } else if (language === 'c') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.c'), code)
       data = cExecutor(input, path.join(os.tmpdir(), r, 'Solution'))
       return res.send(data)
-    }
-    else if (language === "cpp") {
+    } else if (language === 'cpp') {
       fs.writeFileSync(path.join(os.tmpdir(), r, 'Solution.cpp'), code)
       data = cppExecutor(input, path.join(os.tmpdir(), r, 'Solution'))
       return res.send(data)

@@ -1,13 +1,13 @@
 var tmp = require('tmp')
 var fs = require('fs')
-const scriptExecutor = require('../functions/scriptExecutor')
 const Submit = require('../Models/SubmitModel')
 const Rank = require('../Models/RankModel')
 const path = require('path')
 const os = require('os')
-const javaExecutor = require('../functions/scriptJavaExecutor')
-const cExecutor = require('../functions/scriptCExecutor')
-const cppExecutor = require('../functions/scriptCppExecutor')
+const scriptExecutor = require('../functions/scripts/scriptExecutor')
+const javaExecutor = require('../functions/scripts/scriptJavaExecutor')
+const cExecutor = require('../functions/scripts/scriptCExecutor')
+const cppExecutor = require('../functions/scripts/scriptCppExecutor')
 const mongoose = require('mongoose')
 
 exports.submitScript = (req, res) => {
@@ -17,23 +17,19 @@ exports.submitScript = (req, res) => {
     language === 'python'
       ? '.py'
       : language === 'javascript'
-        ? '.js'
-        : language === 'php'
-          ? '.php'
-          : null
+      ? '.js'
+      : language === 'php'
+      ? '.php'
+      : null
   let command =
     language === 'python'
-      ? 'python'
+      ? 'python3'
       : language === 'javascript'
-        ? 'node'
-        : language === 'php'
-          ? 'php'
-          : null
-  if (
-    language === 'python' ||
-    language == 'javascript' ||
-    language === 'php'
-  ) {
+      ? 'node'
+      : language === 'php'
+      ? 'php'
+      : null
+  if (language === 'python' || language == 'javascript' || language === 'php') {
     tmp.file({ prefix: 'projectA-', postfix: ext, keep: true }, function (
       ferr,
       path,

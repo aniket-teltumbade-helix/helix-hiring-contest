@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const chalk = require('chalk')
 const { uid } = require('rand-token')
-const resetPassMail = require('../functions/resetPassMail')
 const authpasskey = process.env.AUTH_PASS_KEY
 var redis = require('redis')
 var retryStrategy = require('node-redis-retry-strategy')
 const { redisData } = require('../config')
+const resetPassMail = require('../functions/mail/resetPassMail')
 
 var client = redis.createClient(redisData)
 client.on('connect', function () {
@@ -17,12 +17,15 @@ client.on('connect', function () {
 exports.userRegister = (req, res) => {
   const { full_name, email, password, phone_number } = req.body
   var hashpass = bcrypt.hashSync(password, 8)
-  Developer.create({ full_name,phone_number, email, password: hashpass }, (err, result) => {
-    if (err) res.send({ err: `RegistrationErr: ${err}` })
-    else if (result) {
-      res.send({ msg: `Registration Successful!` })
-    } else res.send({ err: 'Something went wrong!' })
-  })
+  Developer.create(
+    { full_name, phone_number, email, password: hashpass },
+    (err, result) => {
+      if (err) res.send({ err: `RegistrationErr: ${err}` })
+      else if (result) {
+        res.send({ msg: `Registration Successful!` })
+      } else res.send({ err: 'Something went wrong!' })
+    }
+  )
 }
 exports.userLogin = (req, res) => {
   const { email, password } = req.body
@@ -67,10 +70,10 @@ exports.userProfile = (req, res) => {
   )
 }
 exports.requestDevPassToken = (req, res) => {
-  const { email } = req.body
-  Developer.findOne(req.body, (docerr, doc) => {
-    if (doc.email) {
-      let passtoken = uid(6)
+  Developer.findOne({ email: req.body.email }, (docerr, doc) => {
+    console.log(doc)
+    if (doc) {
+      let passtoken = uid(16)
       client.set(passtoken, doc.email, (rerr, rreply) => {
         resetPassMail(
           doc.full_name,
