@@ -9,6 +9,7 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
+import Button from '@material-ui/core/Button'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
@@ -79,7 +80,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Sidebar (props) {
+export default function Sidebar(props) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -108,19 +109,22 @@ export default function Sidebar (props) {
         { text: 'Create Challenge', link: '/challenges/create' }
       ]
     },
+
     {
       text: 'Contest',
       subList: [
-        { text: 'View Contests', link: '/Contests' },
-        { text: 'Create Contest', link: '/Contests/create' }
+        { text: 'View Contests', link: '/contests' },
+        { text: 'Create Contest', link: '/contests/create' }
       ]
     },
+    { text: 'Multiple Choice Questions', link: '/mcqs' },
     { text: 'Leaderboard', link: '/leaderboard' },
-    { text: 'Statistics', link: '/statistics' }
+    { text: 'Statistics', link: '/statistics' },
   ]
   return (
     <div className={classes.root}>
       <CssBaseline />
+
       <AppBar
         position='fixed'
         className={clsx(classes.appBar, {
@@ -128,21 +132,24 @@ export default function Sidebar (props) {
         })}
         color='primary'
       >
-        <Toolbar>
+        <Toolbar style={{ width: '100%', display: 'flex' }}>
           <IconButton
             color='secondary'
             aria-label='open drawer'
             onClick={handleDrawerOpen}
             edge='start'
+            sx={{ mr: 2 }}
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' noWrap>
-            Codemania
+          <Typography variant="h6" component="div" style={{ flexGrow: "1" }}>
+            Hackerzone
           </Typography>
+          <Button color="secondary" variant='contained' sx={{ flexGrow: 0 }} onClick={props.logout}>Logout</Button>
         </Toolbar>
       </AppBar>
+
       <Drawer
         className={classes.drawer}
         variant='persistent'
@@ -170,7 +177,7 @@ export default function Sidebar (props) {
               </ListItem>
             ) : (
               <>
-                <ListItem button key={index} onClick={() => setList(index)}>
+                <ListItem button key={index} onClick={() => list === index ? setList(0) : setList(index)}>
                   <ListItemText primary={el.text} />
                   {list === index ? <ExpandMore /> : <ExpandLess />}
                 </ListItem>

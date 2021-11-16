@@ -4,16 +4,14 @@ import { green, grey, red } from '@material-ui/core/colors'
 const rawTheme = createTheme({
   palette: {
     primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff',
+      light: '#607D8B',
+      main: '#1e3a5b',
+      dark: '#e0e0e0'
     },
     secondary: {
-      light: '#f44336',
-      main: '#fff',
-      dark: '#ba000d',
-      contrastText: '#000',
+      light: '#8f7263',
+      main: '#e0e0e0',
+      dark: '#455A64'
     },
     warning: {
       main: '#EF5350',
@@ -48,18 +46,6 @@ const fontHeader = {
 }
 
 const theme = {
-  '@global': {
-    '*::-webkit-scrollbar': {
-      width: '0.4em'
-    },
-    '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
-    },
-    '*::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey'
-    }
-  },
   ...rawTheme,
   palette: {
     ...rawTheme.palette,

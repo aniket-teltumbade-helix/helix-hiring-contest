@@ -9,8 +9,10 @@ const ContestSchema = new Schema({
   end_date: { type: Date, required: true },
   tagline: { type: Array, required: true },
   description: { type: String, required: true },
+  duration: { type: Number, required: true },
   creator: { type: String, required: true },
   challenges: [{ type: mongoose.Types.ObjectId, ref: 'problem' }],
+  mcqs:[{ type: mongoose.Types.ObjectId, ref: 'mcq' }],
   users: [{ type: mongoose.Types.ObjectId, ref:'developer'}]
 }, { timestamps: true })
 

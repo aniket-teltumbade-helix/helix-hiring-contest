@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Contest = require('../Models/ContestModel')
 const Problem = require('../Models/ProblemModel')
 const { inviteMail } = require('../functions/mail')
+const MCQModel = require('../Models/MCQModel')
 
 exports.addContest = (req, res) => {
   const {
@@ -11,7 +12,9 @@ exports.addContest = (req, res) => {
     end_date,
     tagline,
     description,
-    challenges
+    challenges,
+    mcqs,
+    duration
   } = req.body
   const creator = req.email
   Contest.create(
@@ -23,6 +26,8 @@ exports.addContest = (req, res) => {
       tagline,
       description,
       challenges,
+      mcqs,
+      duration,
       creator
     },
     (err, result) => {
@@ -104,7 +109,7 @@ exports.contestChallenges = (req, res) => {
   //res.send(req.body)
   Contest.find(
     req.body,
-    { name: 1, start_date: 1, end_date: 1, creator: 1, challenges: 1 },
+    { name: 1, start_date: 1, end_date: 1, creator: 1, challenges: 1, mcqs: 1, duration: 1},
     (cdocerr, cdoc) => {
       if (cdocerr) {
         res.status(422).send({ msg: `QueryProcessingErr:${cdocerr}` })
@@ -119,7 +124,7 @@ exports.contestChallenges = (req, res) => {
               }
             }
           ],
-          (pdocerr, pdoc) => {
+          async (pdocerr, pdoc) => {
             if (pdocerr) {
               res.status(422).send({ msg: `QueryProcessingErr:${pdocerr}` })
             } else {
@@ -129,11 +134,22 @@ exports.contestChallenges = (req, res) => {
                   : cdoc[0].start_date > new Date()
                     ? 'Upcoming'
                     : 'Ended'
+              let mdoc = await MCQModel.aggregate(
+                [
+                  {
+                    $match: {
+                      _id: {
+                        $in: cdoc[0].mcqs
+                      }
+                    }
+                  }
+                ])
               res
                 .status(200)
                 .send({
                   challenges: pdoc,
                   name: cdoc[0].name,
+                  mcqs: mdoc ? mdoc : [],
                   data: cdoc[0],
                   status
                 })
@@ -181,6 +197,51 @@ exports.contestChallenge = (req, res) => {
                 .status(400)
                 .send({
                   err: 'Bad Request - problem is not associated with contest.'
+                })
+            }
+          }
+        }
+      )
+    }
+  })
+}
+exports.contestMcq = (req, res) => {
+  const { name, mcq } = req.body
+  MCQModel.findOne({ name: mcq }, (pdocerr, pdoc) => {
+    if (pdocerr) {
+      res.status(422).send({ msg: `QueryProcessingErr:${pdocerr}` })
+    } else if (pdoc === null) {
+      res
+        .status(400)
+        .send({ err: 'Bad Request - MCQ is not present in database.' })
+    } else {
+      Contest.aggregate(
+        [
+          {
+            $match: {
+              mcqs: {
+                $in: [pdoc._id]
+              }
+            }
+          },
+          {
+            $project: {
+              name: 1,
+              _id: 0
+            }
+          }
+        ],
+        (cdocerr, cdoc) => {
+          if (cdocerr) {
+            res.status(422).send({ msg: `QueryProcessingErr:${pdocerr}` })
+          } else {
+            if (cdoc.some(el => el.name === name)) {
+              res.status(200).send(pdoc)
+            } else {
+              res
+                .status(400)
+                .send({
+                  err: 'Bad Request - MCQ is not associated with contest.'
                 })
             }
           }

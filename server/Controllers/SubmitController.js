@@ -9,6 +9,8 @@ const javaExecutor = require('../functions/scriptJavaExecutor')
 const cExecutor = require('../functions/scriptCExecutor')
 const cppExecutor = require('../functions/scriptCppExecutor')
 const mongoose = require('mongoose')
+const MCQModel = require('../Models/MCQModel')
+const EndContestModel = require('../Models/EndContestModel')
 
 exports.submitScript = (req, res) => {
   let user = req.email
@@ -23,7 +25,7 @@ exports.submitScript = (req, res) => {
           : null
   let command =
     language === 'python'
-      ? 'python'
+      ? 'python3'
       : language === 'javascript'
         ? 'node'
         : language === 'php'
@@ -64,40 +66,49 @@ exports.submitScript = (req, res) => {
         let score = points * chances
         let status = score === points ? 'Accepted' : 'Wrong Answer'
         cleanupCallback()
-        Submit.create(
-          {
-            contest,
-            challenge,
-            user,
-            score,
-            status,
-            test_result,
-            code: script,
-            language
-          },
-          (sdocerr, sdoc) => {
-            if (sdocerr) {
-              res.status(400).send({ msg: `SubmitErr: ${sdocerr}` })
-            } else {
-              Rank.findOneAndUpdate(
-                { contest, challenge, user },
-                { score, percent, language },
-                {
-                  new: true,
-                  upsert: true,
-                  rawResult: true
-                },
-                (rdocerr, rdoc) => {
-                  if (rdocerr) {
-                    res.status(400).send({ msg: `RankErr: ${rdocerr}` })
-                  } else {
-                    res.status(200).send({ Rank: rdoc, Submit: sdoc })
-                  }
-                }
-              )
-            }
+        EndContestModel.find({ name: contest, email: user }, (err, ecres) => {
+          if (err) {
+            res.status(400).send({ err: `SubmitErr: ${err}` })
+          } else if (ecres.submitted === true) {
+            res.status(200).send({ msg: 'Contest Ended, you can not submit it.' })
           }
-        )
+          else {
+            Submit.create(
+              {
+                contest,
+                challenge,
+                user,
+                score,
+                status,
+                test_result,
+                code: script,
+                language
+              },
+              (sdocerr, sdoc) => {
+                if (sdocerr) {
+                  res.status(400).send({ msg: `SubmitErr: ${sdocerr}` })
+                } else {
+                  Rank.findOneAndUpdate(
+                    { contest, challenge, user },
+                    { score, percent, language, mcqs: '' },
+                    {
+                      new: true,
+                      upsert: true,
+                      rawResult: true
+                    },
+                    (rdocerr, rdoc) => {
+                      if (rdocerr) {
+                        res.status(400).send({ msg: `RankErr: ${rdocerr}` })
+                      } else {
+                        res.status(200).send({ Rank: rdoc, Submit: sdoc })
+                      }
+                    }
+                  )
+                }
+              }
+            )
+          }
+        })
       }
     })
   } else {
@@ -152,40 +163,49 @@ exports.submitScript = (req, res) => {
     let percent = chances * 100
     let score = points * chances
     let status = score === points ? 'Accepted' : 'Wrong Answer'
-    Submit.create(
-      {
-        contest,
-        challenge,
-        user,
-        score,
-        status,
-        test_result,
-        code: script,
-        language
-      },
-      (sdocerr, sdoc) => {
-        if (sdocerr) {
-          res.status(400).send({ msg: `SubmitErr: ${sdocerr}` })
-        } else {
-          Rank.findOneAndUpdate(
-            { contest, challenge, user },
-            { score, percent, language },
-            {
-              new: true,
-              upsert: true,
-              rawResult: true
-            },
-            (rdocerr, rdoc) => {
-              if (rdocerr) {
-                res.status(400).send({ msg: `RankErr: ${rdocerr}` })
-              } else {
-                res.status(200).send({ Rank: rdoc, Submit: sdoc })
-              }
-            }
-          )
-        }
+    EndContestModel.find({ name: contest, email: user }, (err, ecres) => {
+      if (err) {
+        res.status(400).send({ err: `SubmitErr: ${err}` })
+      } else if (ecres.submitted === true) {
+        res.status(200).send({ msg: 'Contest Ended, you can not submit it.' })
       }
-    )
+      else {
+        Submit.create(
+          {
+            contest,
+            challenge,
+            user,
+            score,
+            status,
+            test_result,
+            code: script,
+            language
+          },
+          (sdocerr, sdoc) => {
+            if (sdocerr) {
+              res.status(400).send({ msg: `SubmitErr: ${sdocerr}` })
+            } else {
+              Rank.findOneAndUpdate(
+                { contest, challenge, user },
+                { score, percent, language, mcq: '' },
+                {
+                  new: true,
+                  upsert: true,
+                  rawResult: true
+                },
+                (rdocerr, rdoc) => {
+                  if (rdocerr) {
+                    res.status(400).send({ msg: `RankErr: ${rdocerr}` })
+                  } else {
+                    res.status(200).send({ Rank: rdoc, Submit: sdoc })
+                  }
+                }
+              )
+            }
+          }
+        )
+      }
+    })
   }
 }
 
@@ -218,6 +238,48 @@ exports.review = (req, res) => {
       res.status(400).send({ msg: `SubmitErr: ${err}` })
     } else {
       res.status(200).send(result)
+    }
+  })
+}
+exports.submitMcq = (req, res) => {
+  let user = req.email
+  let { contest, mcq, answer } = req.body
+  var score = 0
+  var percent = 0
+  MCQModel.find({ name: mcq }, (err, result) => {
+    if (err) {
+      res.status(400).send({ msg: `SubmitErr: ${err}` })
+    } else {
+      console.log(result[0].options.filter(el => el.option === answer)[0].answer, answer);
+      if (result[0].options.filter(el => el.option === answer)[0].answer) {
+        score = result[0].points
+        percent = 100
+      }
+      EndContestModel.find({ name: contest, email: user }, (err, ecres) => {
+        if (err) {
+          res.status(400).send({ err: `SubmitErr: ${err}` })
+        } else if (ecres.submitted === true) {
+          res.status(200).send({ msg: 'Contest Ended, you can not submit it.' })
+        }
+        else {
+          Rank.findOneAndUpdate(
+            { contest, mcq, user },
+            { score, percent, language: '', challenge: '' },
+            {
+              new: true,
+              upsert: true,
+              rawResult: true
+            },
+            (rdocerr, rdoc) => {
+              if (rdocerr) {
+                res.status(400).send({ msg: `RankErr: ${rdocerr}` })
+              } else {
+                res.status(200).send({ Rank: rdoc })
+              }
+            }
+          )
+        }
+      })
     }
   })
 }

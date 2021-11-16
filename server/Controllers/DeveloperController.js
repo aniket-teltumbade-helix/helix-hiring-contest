@@ -17,7 +17,7 @@ client.on('connect', function () {
 exports.userRegister = (req, res) => {
   const { full_name, email, password, phone_number } = req.body
   var hashpass = bcrypt.hashSync(password, 8)
-  Developer.create({ full_name,phone_number, email, password: hashpass }, (err, result) => {
+  Developer.create({ full_name, phone_number, email, password: hashpass }, (err, result) => {
     if (err) res.send({ err: `RegistrationErr: ${err}` })
     else if (result) {
       res.send({ msg: `Registration Successful!` })
@@ -68,8 +68,9 @@ exports.userProfile = (req, res) => {
 }
 exports.requestDevPassToken = (req, res) => {
   const { email } = req.body
-  Developer.findOne(req.body, (docerr, doc) => {
-    if (doc.email) {
+  Developer.findOne({ email }, (docerr, doc) => {
+    console.log("doc.email", doc);
+    if (doc) {
       let passtoken = uid(6)
       client.set(passtoken, doc.email, (rerr, rreply) => {
         resetPassMail(
@@ -92,7 +93,7 @@ exports.resetDevPassword = (req, res) => {
   const { password, passkey } = req.body
   client.get(passkey, (rerr, rreply) => {
     if (rerr) {
-      res.send({ msg: 'Expired key! Resend Email!' })
+      res.send({ err: 'Expired key! Resend Email!' })
     } else {
       var hashpass = bcrypt.hashSync(password, 8)
       Developer.findOneAndUpdate(
@@ -100,7 +101,7 @@ exports.resetDevPassword = (req, res) => {
         { password: hashpass },
         (docerr, doc) => {
           if (docerr) {
-            res.send('Something Went wrong')
+            res.send({ err: 'Something Went wrong' })
           } else {
             res.send({ msg: 'Password changed Successfully!' })
           }

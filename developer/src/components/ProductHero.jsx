@@ -41,9 +41,9 @@ function ProductHero(props) {
         alt='increase priority'
       />
       <Typography color='inherit' align='center' variant='h2' marked='center'>
-        Evaluate candidates quickly,
+        Matching developers
         <br />
-        affordably, and accurately.
+        with great companies.
       </Typography>
       <Typography
         color='inherit'
@@ -67,9 +67,6 @@ function ProductHero(props) {
           Register
         </Button>
       </Link>
-      <Typography variant='body2' color='inherit' className={classes.more}>
-        14 day free trial. Plans begin at $99/month.
-      </Typography>
     </ProductHeroLayout>
   )
 }

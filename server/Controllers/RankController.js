@@ -162,3 +162,52 @@ exports.challengeRank = (req, res) => {
     }
   )
 }
+
+exports.solvedChallenges = (req, res) => {
+  let { contest, challenges } = req.body
+  let { email } = req
+  Rank.aggregate(
+    [
+      {
+        $match: {
+          contest: contest,
+          user: email,
+          challenge: {
+            $in: challenges
+          }
+        }
+      }
+    ],
+    (docerr, doc) => {
+      if (docerr) {
+        res.status(304).send({ err: 'Something went wrong!' })
+      } else {
+        res.status(200).send(doc)
+      }
+    }
+  )
+}
+exports.solvedMcqs = (req, res) => {
+  let { contest, mcqs } = req.body
+  let { email } = req
+  Rank.aggregate(
+    [
+      {
+        $match: {
+          contest: contest,
+          user: email,
+          mcq: {
+            $in: mcqs
+          }
+        },
+      }
+    ],
+    (docerr, doc) => {
+      if (docerr) {
+        res.status(304).send({ err: 'Something went wrong!' })
+      } else {
+        res.status(200).send(doc)
+      }
+    }
+  )
+}

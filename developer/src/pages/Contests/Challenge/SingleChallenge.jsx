@@ -45,10 +45,11 @@ export class SingleChallenge extends Component {
             this.props.data.samples,
             this.props.data.name, true)
     }
-    
+
 
     render() {
-        return (
+        console.log(this.props.data);
+        return this.props.data?(
             <Box display="flex">
                 <Grid container md={6} elevation={3} noGutter>
                     <Grid item xs m={0}>
@@ -93,7 +94,7 @@ export class SingleChallenge extends Component {
                                 </Select>
                             </FormControl>
                         </Box>
-                        <Box sx={{marginTop:"50px"}}></Box>
+                        <Box sx={{ marginTop: "50px" }}></Box>
                         <Editor
                             theme="vs-dark"
                             height="50vh"
@@ -109,12 +110,12 @@ export class SingleChallenge extends Component {
                                     disabled={this.state.code === "// let's write some broken code 😈"}>Run</Button>
                             </Box>
                             <Box m={1}>
-                                <Button 
-                                size="small" 
-                                color="primary" 
-                                variant="outlined" 
-                                disabled={this.state.code === "// let's write some broken code 😈"}
-                                onClick={()=>this.props.handleSubmit(this.state)}
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                    disabled={this.state.code === "// let's write some broken code 😈"}
+                                    onClick={() => this.props.handleSubmit(this.state)}
                                 >Submit</Button>
                             </Box>
                         </Box>
@@ -150,7 +151,7 @@ export class SingleChallenge extends Component {
                     </Grid>
                 </Grid>
             </Box>
-        )
+        ):<h1>Loading</h1>
     }
 }
 

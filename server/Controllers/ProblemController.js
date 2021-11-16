@@ -52,7 +52,7 @@ exports.run = (req, res) => {
           : null
   let command =
   language === 'python'
-        ? 'python'
+        ? 'python3'
         : language === 'javascript'
           ? 'node'
           : language === 'php'
@@ -176,7 +176,7 @@ exports.compile = (req, res) => {
           : null
   let command =
     language === 'python'
-      ? 'python'
+      ? 'python3'
         : language === 'javascript'
           ? 'node'
           : language === 'php'

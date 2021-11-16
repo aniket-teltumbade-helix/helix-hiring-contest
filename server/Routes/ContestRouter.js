@@ -1,4 +1,4 @@
-const { addContest, liveContest, upcomingContest, endedContest, contestChallenges, contestChallenge, createdbymeContest, allContests, invitaion } = require('../Controllers/ContestController')
+const { addContest, liveContest, upcomingContest, endedContest, contestChallenges, contestChallenge, createdbymeContest, allContests, invitaion, contestMcq } = require('../Controllers/ContestController')
 const authverify = require('../functions/authverify')
 
 const ContestRouter = require('express').Router()
@@ -9,6 +9,7 @@ ContestRouter.get('/upcoming', authverify, upcomingContest)
 ContestRouter.get('/ended', authverify, endedContest)
 ContestRouter.post('/contest', authverify, contestChallenges)
 ContestRouter.post('/contestchallenge', authverify, contestChallenge)
+ContestRouter.post('/contestmcq', authverify, contestMcq)
 ContestRouter.post('/createdbyme', authverify, createdbymeContest)
 ContestRouter.post('/all', authverify, allContests)
 ContestRouter.post('/invite', authverify, invitaion)

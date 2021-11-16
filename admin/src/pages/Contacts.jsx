@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Box, Grid, IconButton, Dialog, DialogContent, DialogTitle, Typography, TextField, DialogActions, Button } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { addContact, loadContacts } from '../../redux/actions/contactActions';
-import BasicTable from '../../components/BasicTable';
+import { addContact, loadContacts } from '../redux/actions/contactActions';
+import BasicTable from '../components/BasicTable';
 
 class Contacts extends Component {
     state = {

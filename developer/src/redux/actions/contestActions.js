@@ -6,10 +6,12 @@ import {
   LOAD_ENDED_CONTESTS,
   LOAD_LIVE_CONTESTS,
   LOAD_PROBLEM,
+  LOAD_QUIZ,
   LOAD_UPCOMING_CONTESTS
 } from '../actionTypes'
 
 export const addContest = body => async dispatch => {
+  console.log(body);
   var config = {
     method: 'post',
     url: `${process.env.REACT_APP_API_URL}/contest/add`,
@@ -84,7 +86,9 @@ export const loadContest = body => async dispatch => {
     type: LOAD_CONTEST,
     payload: res.data
   })
+  return res.data
 }
+
 export const loadProblem = body => async dispatch => {
   var config = {
     method: 'post',
@@ -103,6 +107,29 @@ export const loadProblem = body => async dispatch => {
   } else {
     dispatch({
       type: LOAD_PROBLEM,
+      payload: res.data
+    })
+  }
+}
+
+export const loadMcq = body => async dispatch => {
+  var config = {
+    method: 'post',
+    url: `${process.env.REACT_APP_API_URL}/contest/contestmcq`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(body)
+  }
+  let res = await axios(config)
+  if (res.data.err) {
+    dispatch({
+      type: LOAD_QUIZ,
+      payload: null
+    })
+  } else {
+    dispatch({
+      type: LOAD_QUIZ,
       payload: res.data
     })
   }

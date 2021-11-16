@@ -1,4 +1,4 @@
-import { ADD_CONTEST, LOAD_CONTEST, LOAD_CREATORS_CONTESTS, LOAD_ENDED_CONTESTS, LOAD_LIVE_CONTESTS, LOAD_PROBLEM, LOAD_UPCOMING_CONTESTS } from "../actionTypes"
+import { ADD_CONTEST, LOAD_CONTEST, LOAD_CREATORS_CONTESTS, LOAD_ENDED_CONTESTS, LOAD_LIVE_CONTESTS, LOAD_PROBLEM, LOAD_QUIZ, LOAD_UPCOMING_CONTESTS } from "../actionTypes"
 
 const initialState = {
   add_contest: null,
@@ -7,6 +7,7 @@ const initialState = {
   ended_contests: null,
   contest_data: null,
   problem_data: null,
+  quiz_data: null,
   admin_contests: null
 }
 
@@ -33,6 +34,9 @@ const contestReducer = (state = initialState, { type, payload }) => {
 
     case LOAD_CREATORS_CONTESTS:
       return { ...state, admin_contests: payload }
+      
+    case LOAD_QUIZ:
+      return { ...state, quiz_data: payload }
 
     default:
       return state

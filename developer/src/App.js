@@ -11,6 +11,8 @@ import ViewContests from './pages/Contests/ViewContests'
 import Instructions from './pages/Contests/Instructions'
 import Challenges from './pages/Contests/Challenges'
 import ContestEnd from './pages/Contests/ContestEnd'
+import ContestSections from './pages/Contests/CotestSections'
+import Quiz from './pages/Contests/Quiz'
 
 class App extends Component {
   componentDidMount = () => {
@@ -22,12 +24,11 @@ class App extends Component {
     }
   }
   handleLogout = () => {
-    console.log("log---------out");
     this.props.logout()
   }
   render() {
     return (
-      <>
+      <div style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden'}}>
         {this.props.authDetails ? (
           <BrowserRouter>
             {this.props.authDetails.isAuth === true ? (
@@ -46,8 +47,18 @@ class App extends Component {
                   />
                   <Route
                     exact
-                    path='/contests/:contest/challenges'
+                    path='/contests/:contest/challenges/:challenge'
                     component={Challenges}
+                  />
+                  <Route
+                    exact
+                    path='/contests/:contest/mcqs/:mcq'
+                    component={Quiz}
+                  />
+                  <Route
+                    exact
+                    path='/contests/:contest/sections'
+                    component={ContestSections}
                   />
                   <Route
                     exact
@@ -60,8 +71,7 @@ class App extends Component {
             ) : this.props.authDetails.isAuth === false ? (
               <>
                 <Switch>
-                  <Route exact path='/auth/signin' component={Authentication} />
-                  <Route exact path='/auth/signup' component={Authentication} />
+                  <Route exact path={['/auth/signin', '/auth/signup', '/auth/requestpass', '/auth/resetpass/:passkey']} component={Authentication} />
                   <Route path='/' component={LandingPage} />
                 </Switch>
               </>
@@ -75,7 +85,7 @@ class App extends Component {
           <></>
         )}
         {/* Footer */}
-      </>
+      </div>
     )
   }
 }

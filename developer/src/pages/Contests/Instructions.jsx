@@ -14,6 +14,11 @@ import {
 
 } from '@material-ui/core'
 import { withRouter } from 'react-router'
+import { contestStatus, startContest } from '../../redux/actions/endContestAction'
+import { loadContest } from '../../redux/actions/contestActions'
+import moment from 'moment'
+import { withCookies, Cookies } from 'react-cookie';
+import PropTypes from 'prop-types'
 
 const testInstructions = [
     "Ensure that you are attempting the test using the correct email ID.",
@@ -40,11 +45,34 @@ const proctorInstructions = [
 ]
 
 class Instructions extends Component {
+
+    componentDidMount() {
+        let { contest } = this.props.match.params
+        this.props.contestStatus({ name: contest }).then((data) => {
+            if (data.msg.status === true) {
+                this.props.history.push('/')
+            }
+        })
+    }
     handleRoute = () => {
-        this.props.history.push(`/contests/${this.props.match.params.contest}/challenges`)
+        let { contest } = this.props.match.params
+        let { cookies } = this.props
+        this.props.loadContest({ name: contest }).then((data) => {
+            let enddate = moment().add(data.data.duration, 'minutes')
+            let dateMain = new Date(enddate._d)
+            cookies.set('timer', {
+                name: contest,
+                time: dateMain
+            }, { path: '/' })
+            this.props.startContest({
+                name: contest,
+                time: dateMain
+            }).then(() => {
+                this.props.history.push(`/contests/${contest}/sections`)
+            })
+        })
     }
     render() {
-        console.log(this.props);
         return (
             <Box m={6}>
                 <Grid container spacing={8}>
@@ -117,17 +145,16 @@ class Instructions extends Component {
                     </Grid>
                 </Grid>
             </Box>
-
         )
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
 
 })
 
-const mapDispatchToProps = {
-
+Instructions.propTypes={
+    cookies: PropTypes.instanceOf(Cookies).isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Instructions))
+export default connect(mapStateToProps, { startContest, contestStatus, loadContest })(withCookies(withRouter(Instructions)))

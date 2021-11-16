@@ -21,7 +21,12 @@ const AppNav = props => {
       <AppBar position='fixed'>
         <Toolbar variant='dense'>
           <Typography variant='h6' color='inherit'>
-            HelixStack
+            <img
+              src='/static/themes/onepirate/productHeroWonder.png'
+              alt='wonder'
+              width='200px'
+              height='auto'
+            />
           </Typography>
           <div style={{ flexGrow: '1' }} />
           <Link to='/auth/signin'>

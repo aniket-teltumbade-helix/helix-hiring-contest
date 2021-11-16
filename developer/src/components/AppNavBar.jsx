@@ -3,7 +3,6 @@ import {
     Box,
     Button,
     Divider,
-    ListItemText,
     MenuItem,
     MenuList,
     Paper,
@@ -15,6 +14,7 @@ import { Menu, ExitToApp } from "@material-ui/icons";
 
 
 import React from 'react'
+import { useLocation } from "react-router";
 
 
 function MobileMenu(props) {
@@ -28,15 +28,6 @@ function MobileMenu(props) {
                 variant="elevation"
             >
                 <MenuList>
-                    {/* <MenuItem>
-                        <ListItemText>Home</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                        <ListItemText>Practice</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                        <ListItemText>Invitation</ListItemText>
-                    </MenuItem> */}
                     <Divider />
                     <MenuItem>
                         <IconButton onClick={props.handleLogout} color="primary" aria-label="upload picture" component="span">
@@ -53,32 +44,23 @@ export default function AppNavBar(props) {
     const handleClick = (event) => {
         setAnchorEl(!anchorEl);
     };
-    return (
+    const location = useLocation()
+    return !location.pathname.includes('sections') && (
         <>
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h4" style={{ flexGrow: "1" }}>
-                        Helixstack
+                        <img
+                            src='/static/themes/onepirate/productHeroWonder.png'
+                            alt='wonder'
+                            width='200px'
+                            height='auto'
+                        />
                     </Typography>
                     <Box sx={{ flexGrow: "3" }}></Box>
                     <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                        {/* <Box sx={{ flexGrow: "1" }}>
-                            <Button variant="text" >
-                                Home
-                            </Button>
-                        </Box>
-                        <Box sx={{ flexGrow: "1" }}>
-                            <Button variant="text" >
-                                Invitaions
-                            </Button>
-                        </Box>
-                        <Box sx={{ flexGrow: "1" }}>
-                            <Button variant="text" >
-                                Profile
-                            </Button>
-                        </Box> */}
                         <Box >
-                            <IconButton onClick={()=>props.handleLogout()} color="secondary" aria-label="upload picture" component="span">
+                            <IconButton onClick={() => props.handleLogout()} color="secondary" aria-label="upload picture" component="span">
                                 <ExitToApp />
                             </IconButton>
                         </Box>

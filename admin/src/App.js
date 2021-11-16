@@ -13,7 +13,9 @@ import LandingPage from './pages/LandingPage'
 import ViewChallenges from './pages/Challenge/ViewChallenges'
 import ViewContests from './pages/Contest/ViewContests'
 import LeaderBoard from './pages/LeaderBoard'
-import Contacts from './pages/Contacts/Contacts'
+import Contacts from './pages/Contacts'
+import MCQPage from './pages/MCQPage'
+import Footer from './components/Footer'
 
 class App extends Component {
   componentDidMount = () => {
@@ -33,7 +35,7 @@ class App extends Component {
         {this.props.authDetails ? (
           <BrowserRouter>
             {this.props.authDetails.isAuth === true ? (
-              <Sidebar>
+              <Sidebar logout={this.Logout}>
                 <Switch>
                   <Route
                     exact
@@ -49,6 +51,7 @@ class App extends Component {
                   <Route exact path='/contests' component={ViewContests} />
                   <Route exact path='/leaderboard' component={LeaderBoard} />
                   <Route exact path='/contacts' component={Contacts} />
+                  <Route exact path='/mcqs' component={MCQPage} />
                   <Redirect from='*' to='/contests/create' />
                 </Switch>
               </Sidebar>
@@ -70,6 +73,7 @@ class App extends Component {
           <></>
         )}
         {/* Footer */}
+        <Footer />
       </>
     )
   }

@@ -7,7 +7,7 @@ import BasicTable from '../../components/BasicTable'
 import { loadContacts } from '../../redux/actions/contactActions'
 import { contestInvite, creatorContests } from '../../redux/actions/contestActions'
 
-export class ViewChallenges extends Component {
+class ViewContests extends Component {
   state = {
     data: null,
     modal: false
@@ -106,4 +106,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { creatorContests, loadContacts, contestInvite })(ViewChallenges)
+export default connect(mapStateToProps, { creatorContests, loadContacts, contestInvite })(ViewContests)

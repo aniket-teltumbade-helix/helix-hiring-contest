@@ -13,6 +13,9 @@ const ContestRouter = require('./Routes/ContestRouter');
 const SubmitRouter = require('./Routes/SubmitRouter');
 const RankRouter = require('./Routes/RankRouter');
 const ContactRouter = require('./Routes/ContactRoute');
+const { execSync } = require('child_process');
+const MCQRouter = require('./Routes/MCQRoute');
+const EndContestRouter = require('./Routes/EndContestRouter');
 
 const app = express()
 
@@ -32,6 +35,8 @@ app.use('/contest', ContestRouter)
 app.use('/submit', SubmitRouter)
 app.use('/rank', RankRouter)
 app.use('/contact', ContactRouter)
+app.use('/mcq',MCQRouter)
+app.use('/contestflag',EndContestRouter)
 
 app.get('/', (req, res) => {
   res.send('health full')
@@ -62,7 +67,8 @@ app.listen(port, () => {
       }
     }
   };
-
+  console.log(execSync('python3 -V').toString())
+  console.log(execSync('java -version'))
+  console.log(execSync('gcc --version').toString())
   console.log(`Portal Opened at:${chalk.blue(`http://localhost:${port}`)} \nEnvironmental Variables: \n${chalk.cyan(table(data, config))}`);
-
 })

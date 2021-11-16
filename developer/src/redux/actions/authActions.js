@@ -85,6 +85,7 @@ export const devRequestPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 
 export const devResetPass = body => async dispatch => {
@@ -110,6 +111,7 @@ export const devResetPass = body => async dispatch => {
       payload: result.data
     })
   }
+  return result.data
 }
 
 export const compRegister = body => async dispatch => {

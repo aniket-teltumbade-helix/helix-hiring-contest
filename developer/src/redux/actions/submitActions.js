@@ -3,7 +3,8 @@ import {
   LOAD_CHALLENGE_SUBMISSIONS,
   LOAD_REVIEW,
   LOAD_REVIEW_SUBMISSIONS,
-  SUBMIT_PROBLEM
+  SUBMIT_PROBLEM,
+  SUBMIT_QUIZ
 } from '../actionTypes'
 
 export const submitProblem = body => async dispatch => {
@@ -18,6 +19,23 @@ export const submitProblem = body => async dispatch => {
   let res = await axios(config)
   dispatch({
     type: SUBMIT_PROBLEM,
+    payload: res.data
+  })
+  return res.data
+}
+
+export const submitQuiz = body => async dispatch => {
+  var config = {
+    method: 'post',
+    url: `${process.env.REACT_APP_API_URL}/submit/quiz`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(body)
+  }
+  let res = await axios(config)
+  dispatch({
+    type: SUBMIT_QUIZ,
     payload: res.data
   })
   return res.data
